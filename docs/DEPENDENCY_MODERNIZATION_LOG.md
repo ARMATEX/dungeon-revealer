@@ -215,3 +215,13 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   finish handlers now wait for the staging write stream to close before consuming the file.
   Regression: upload suite passed 6/6 consecutive runs (previously flaky).
 - Validation: 18/140/4 green, build OK, lint OK.
+
+### Phase 10 — Socket.IO (done, capped at 4.7.5)
+
+- socket.io + socket.io-client 4.4.0 -> 4.7.5 (exact pins, lockstep).
+- 4.8.x BLOCKED: its bundled engine.io 6.6 ships d.ts using TS 4.5+ syntax that TS 4.4 cannot
+  parse (`error TS1005` in engine.io/build/server.d.ts) — unlocks together with the TS cap
+  (Phase 4 -> Relay migration).
+- Realtime verified: connection, authenticate/reject, role sessions, live-query invalidation,
+  multi-client update, late join, clean shutdown (17 focused tests + full suite green).
+- Validation: 18/140/4 green, build OK, lint OK.
