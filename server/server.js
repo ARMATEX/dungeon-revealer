@@ -305,7 +305,9 @@ const bootstrapServer = async (env) => {
     });
   });
 
-  return { app, httpServer, io };
+  // "db", "emitter" and "fileStorage" are exposed for tests only
+  // (additive, no behavior change).
+  return { app, httpServer, io, db, emitter, fileStorage };
 };
 
 module.exports = { bootstrapServer };

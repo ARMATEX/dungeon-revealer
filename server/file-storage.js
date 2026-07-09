@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const once = require("lodash/once");
 const path = require("path");
@@ -23,8 +23,23 @@ const createDatabaseInterface = (db) => {
     path,
   });
 
+  // Prepared statements are tracked so they can be finalized before closing
+  // the database (used by tests only; the production process never closes it).
+  const preparedStatements = [];
+  const prepare = (sql) =>
+    db.prepare(sql).then((statement) => {
+      preparedStatements.push(statement);
+      return statement;
+    });
+
+  const finalizePreparedStatements = async () => {
+    while (preparedStatements.length > 0) {
+      await preparedStatements.pop().finalize();
+    }
+  };
+
   const getInsertOneStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       INSERT INTO "file_uploads" (
         "id",
         "title",
@@ -45,7 +60,7 @@ const createDatabaseInterface = (db) => {
     );
 
   const getSelectManyOffsetStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       SELECT
         "id",
         "title",
@@ -67,7 +82,7 @@ const createDatabaseInterface = (db) => {
       .then((records) => records.map(transformRecord));
 
   const getSelectPathStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       SELECT "path"
       FROM "file_uploads"
       WHERE
@@ -85,7 +100,7 @@ const createDatabaseInterface = (db) => {
       .then((record) => (record ? record.path : null));
 
   const getSelectRecordByIdStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       SELECT
         "id",
         "title",
@@ -107,7 +122,7 @@ const createDatabaseInterface = (db) => {
       .then((record) => (record ? transformRecord(record) : null));
 
   const getDeleteRecordByIdStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       DELETE
       FROM "file_uploads"
       WHERE
@@ -122,7 +137,7 @@ const createDatabaseInterface = (db) => {
     getDeleteRecordByIdStatement().then((statement) => statement.get(id));
 
   const getUpdateTitleWhereIdStatement = lazy(() =>
-    db.prepare(`
+    prepare(`
       UPDATE "file_uploads"
       SET
         "title" = ?
@@ -144,6 +159,7 @@ const createDatabaseInterface = (db) => {
     selectRecordById,
     deleteRecordById,
     updateTitleWhereId,
+    finalizePreparedStatements,
   };
 };
 
@@ -201,6 +217,14 @@ class FileStorage {
     }
     const record = await this.getById(id);
     return record;
+  }
+
+  /**
+   * Finalizes the lazily prepared statements so the database can be closed.
+   * Only used by tests; the production process never closes the database.
+   */
+  async destroy() {
+    await this._db.finalizePreparedStatements();
   }
 
   async resolvePath(fileId) {

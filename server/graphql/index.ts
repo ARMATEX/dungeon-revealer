@@ -1,4 +1,9 @@
-import { createTypesFactory, buildGraphQLSchema } from "gqtx";
+// This import must stay first: the GraphQL modules imported below consume
+// `t` from this module at evaluation time (circular import).
+import { t } from "./types-factory";
+import { buildGraphQLSchema } from "gqtx";
+
+export { t };
 import type { Socket as IOSocket, Server as IOServer } from "socket.io";
 import type { ChatPubSubConfig, createChat } from "../chat";
 import type { createUser, UserPubSubConfig } from "../user";
@@ -37,8 +42,6 @@ export type GraphQLContextType = {
   maps: Maps;
   settings: Settings;
 };
-
-export const t = createTypesFactory<GraphQLContextType>();
 
 import { specifiedDirectives } from "graphql";
 import * as RelaySpecModule from "./modules/relay-spec";
