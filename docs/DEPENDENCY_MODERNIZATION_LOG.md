@@ -193,3 +193,12 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   need re-verification — separate migration task.
 - Smoke coverage: baseline suites exercise /api/auth, active-map, uploads, role gates, shutdown.
 - Validation: 18/140 green, build OK, lint OK.
+
+### Phase 8 — SQLite and native deps (done)
+
+- sqlite3 5.0.2 -> 6.x (Node-API prebuilds — no node-gyp compile needed on Node 24);
+  sqlite (wrapper) 4.0.23 -> 5.x.
+- Migration behavior re-verified by baseline suites: fresh-dir creation, PRAGMA user_version=4,
+  idempotent reopen, data preserved, legacy notes import, prepared statements, clean close.
+- No schema change. Existing db.sqlite files remain compatible (migrations untouched).
+- Validation: 18/140 green, backend tsc green, lint green.
