@@ -150,3 +150,15 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   ts-node-dev 1.1.8 -> 2.0.0.
 - cross-env: unused (no script references) — removal deferred to Phase 18.
 - Validation: 18/140/4 green, build OK, lint OK.
+
+### Phase 4 — TypeScript and types (BLOCKED, documented)
+
+- Empirical bisect: typescript 5.9.3 crashes `relay-compiler-language-typescript` 13
+  ("Unhandled SyntaxKind"); 4.9.5 same; 4.7.4 and 4.6.4 silently emit CORRUPTED relay artifacts
+  (`import { FragmentRefs as  }` — empty alias). Only 4.4.x produces correct artifacts.
+- The plugin is abandoned, patched locally (patches/) and pinned by relay-compiler 10 — TypeScript
+  is therefore hard-capped at 4.4.4 until the Relay stack migration (Phase 15/16).
+- Modern @types (node 24, lodash 4.17, express 4.17.23 et al.) use d.ts syntax TS 4.4 cannot parse
+  (1450 TS1005 errors) — the whole category moves together with TypeScript.
+- Outcome: all category-3 packages reverted to original pins; artifacts regenerated identical;
+  build/lint green; upload-suite flake re-confirmed as legacy defect #11 (passes in isolation).
