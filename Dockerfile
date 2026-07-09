@@ -1,4 +1,4 @@
-FROM node:24 as dependency-builder
+FROM node:24 AS dependency-builder
 
 WORKDIR /usr/src/build
 
@@ -9,19 +9,19 @@ COPY . .
 RUN npm install
 
 
-FROM dependency-builder as application-builder
+FROM dependency-builder AS application-builder
 
 ARG SKIP_BUILD
 
 RUN if [ "$SKIP_BUILD" = "true" ]; then echo "SKIP BUILD"; else npm run build; fi
 
-FROM dependency-builder as production-dependency-builder
+FROM dependency-builder AS production-dependency-builder
 
 # then we remove all dependencies we no longer need
 RUN npm prune --production
 
 
-FROM node:24-slim as final
+FROM node:24-slim AS final
 
 # Create app directory
 WORKDIR /usr/src/app
