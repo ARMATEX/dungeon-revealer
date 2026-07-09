@@ -305,3 +305,12 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   monaco-editor 0.31.1 (copy script + VITE_MONACO_VERSION coupling; editor has no automated
   coverage), parse-color/fast-sha256 (no newer releases), leva 0.9.14 (react-spring cluster).
 - Validation: 18/140/4 green, full build green, lint green.
+
+### Phase 18 — unused package removal (done)
+
+- Removed cross-env 7.0.3 (zero references in scripts/config/CI) and parse-color 1.0.0 (zero
+  imports across src/server/scripts/config).
+- Verified still-used and kept: body-scroll-lock (modal), fast-sha256 (crypto), postcss
+  (user-style-sheet processing), leva (chat message button), domhandler (aligned with
+  htmlparser2 9).
+- Validation: 18/140 green, frontend build green.
