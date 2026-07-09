@@ -241,3 +241,14 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   (leading-pipe style); union members and schema semantics identical.
 - Validation: 18/140/4 green (live query invalidation, late join, roles, 2-client update),
   write-schema green, build OK, lint OK.
+
+### Phase 12 — Vite (done, capped at 4.x)
+
+- vite 2.7.3 -> 4.5.x; @vitejs/plugin-react-refresh (deprecated) replaced by
+  @vitejs/plugin-react 4.x; vite-plugin-babel-macros -> 1.0.6; vite.config.ts adapted.
+- Vite 5/6/7/8 BLOCKED: they declare a peer on @types/node >=18/20, which is pinned at 14 by the
+  TS 4.4 cap (Phase 4 -> Relay). Unlocks with the Relay/TS migration.
+- Build verified: index.html generated with hashed assets, 16 chunks, monaco 0.31.1 copied,
+  relay artifacts compiled; chunk-size warning is pre-existing.
+- Vite DEV server (port 4000 proxy) not exercised here — added to manual checklist.
+- Validation: 18/140/4 green, backend tsc green, lint green.
