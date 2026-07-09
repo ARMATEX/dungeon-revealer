@@ -252,3 +252,12 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   relay artifacts compiled; chunk-size warning is pre-existing.
 - Vite DEV server (port 4000 proxy) not exercised here — added to manual checklist.
 - Validation: 18/140/4 green, backend tsc green, lint green.
+
+### Phase 13 — React core (BLOCKED, documented)
+
+- react/react-dom 17.0.2 are already the latest 17.x releases.
+- React 18/19 BLOCKED by hard peer/API coupling: react-three-fiber 5 (renamed to
+  @react-three/fiber, v8+ requires React 18 and a map-stack API migration), relay-hooks 4 /
+  react-relay 10 (modern Relay requires React 18 + Rust compiler migration), @chakra-ui/react 1
+  (v2 requires React 18; v3 is an API rewrite). Requires a dedicated migration epic
+  (Relay -> React -> Chakra -> Three, in that order).
