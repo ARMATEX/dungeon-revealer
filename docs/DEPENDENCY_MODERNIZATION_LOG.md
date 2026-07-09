@@ -261,3 +261,22 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   react-relay 10 (modern Relay requires React 18 + Rust compiler migration), @chakra-ui/react 1
   (v2 requires React 18; v3 is an API rewrite). Requires a dedicated migration epic
   (Relay -> React -> Chakra -> Three, in that order).
+
+### Phase 14 — Chakra/Emotion/UI components (partial)
+
+- Updated (safe satellites compatible with Chakra 1 + React 17): @emotion/react + @emotion/styled
+  11.14.x, @emotion/sheet 1.4.x, react-focus-lock 2.13.x, react-colorful 5.7, polished 4.3,
+  react-virtuoso 2.x latest.
+- BLOCKED: @chakra-ui/react 1.7.3 (v2 needs React 18, v3 is an API rewrite); framer-motion 4
+  (Chakra 1 peer ^4); body-scroll-lock 3.1.5 (4.x is beta-only); react-easy-crop kept (newer
+  majors target React 18 era; UI cropper has no automated coverage).
+- No redesign; visual behavior must be spot-checked manually (DM + player UIs).
+- Validation: frontend build green, 18/140 green, lint green.
+
+### Phase 15 — Three.js map stack (BLOCKED, documented)
+
+- three 0.126.1, react-three-fiber 5.3.22 (pre-rename), three-stdlib 1.1.3, troika-three-text
+  0.40.0, react-spring 9.0.0-rc.3 (patched), react-use-gesture 9.1.3, leva 0.9.14: one coupled
+  cluster pinned to React 17 + the patched react-spring RC. Upgrading means migrating to
+  @react-three/fiber 8+/@use-gesture/react/react-spring stable — the map-rendering migration epic.
+- Only react-use-measure 2.0.4 -> 2.1.x updated (standalone, React 17 compatible).
