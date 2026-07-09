@@ -330,3 +330,41 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
 - `npm outdated` after this pass: ~56 packages remain, all inside the documented blocked clusters
   (React/Relay/Chakra/Three/framer-motion/vite>=5/socket.io 4.8/graphql 16/TS>=4.5/@types).
 - No `npm audit fix` / `--force` was used.
+
+## Final State Summary (supersedes the per-row Status column above)
+
+Updated in this pass: prettier 3.9, husky 9.1, lint-staged 17, patch-package 8, caxa 3.0.1,
+ts-node-dev 2, eslint-config-prettier 9, jest+babel-jest 30.4, @babel/* 7.29/7.28,
+express 4.22, body-parser 1.20, morgan 1.11, serve-favicon 2.5.1, sqlite3 6 (SQLite 3.52),
+sqlite 5, connect-busboy 1 (+types), fs-extra 11 (+types), unzipper 0.12,
+socket.io+client 4.7.5, graphql 15.10, gqtx 0.8.1 stable, @graphql-yoga/subscription 5,
+@n1ru4l/* 0.10/0.13/0.8/3.2 family, vite 4.5 + @vitejs/plugin-react 4, emotion 11.14 satellites,
+react-focus-lock 2.13, react-colorful 5.7, polished 4.3, react-virtuoso 2.x, react-use-measure
+2.1, lodash 4.18, fp-ts 2.16, io-ts 2.2.22, sanitize-html 2.17, liquidjs 10,
+@monaco-editor/react 4.7, dice-notation 2.x, use-async-effect 1.4, zustand 4.5,
+htmlparser2 9 + domhandler 5, postcss 8.5.16. Removed: cross-env, parse-color.
+
+Blocked clusters (keystone: Relay 10 + relay-compiler-language-typescript 13, patched):
+typescript >4.4.4 and all newer @types; jest types 30; eslint 8+ (eslint-plugin-react-app);
+express 5 (route patterns); graphql 16 (relay peer); socket.io 4.8 (engine.io d.ts vs TS 4.4);
+vite 5+ (@types/node peer); react 18+; chakra 2+/framer-motion 5+; three/r3f/react-spring/
+use-gesture/leva map cluster; relay 11+; junk 4 (ESM); use-sound (patched); showdown 2
+(react-showdown); body-scroll-lock 4 (beta); monaco-editor >0.31 (untested editor surface);
+babel 8 (relay macros); caxa (abandoned, no successor adopted).
+
+Recommended unlock order: (1) Relay modern (Rust compiler, removes TS plugin) -> (2) TypeScript
+5.x + all @types + jest types + socket.io 4.8 + graphql 16 + vite 8 -> (3) React 18/19 ->
+(4) Chakra + framer-motion -> (5) @react-three/fiber map stack.
+
+### Phase 20 — final validation (done)
+
+- Fresh `npm ci` (1506 packages) on the committed lockfile: OK.
+- 18 suites / 140 tests / 4 snapshots green with --detectOpenHandles (no open handles).
+- Full build (relay-compiler + vite 4 + tsc) green; ESLint green (--max-warnings 0).
+- Automated smoke: baseline-server-boot suite boots the real server on a dynamic port, serves
+  /api/auth and index.html for / and /dm from the public path, and shuts down cleanly.
+- Docker: CLI 29.6.1 present but the Docker Desktop daemon was NOT running in this environment —
+  `docker build -t dungeon-revealer-modernized:test .` could not be executed. Run it manually
+  once the daemon is up (Dockerfile already targets node:24).
+- Legacy data compatibility preserved: no schema changes, migrations untouched, on-disk formats
+  unchanged (verified by the persistence/migration baseline suites throughout).
