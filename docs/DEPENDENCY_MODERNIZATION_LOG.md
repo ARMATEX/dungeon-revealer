@@ -173,3 +173,13 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
 - 3 inline snapshots re-recorded after review: only the documented Jest 29 default snapshot-format
   change (`Object {`/`Array [` -> `{`/`[`, printBasicPrototype:false); values identical.
 - Validation: 18/140/4 green (also with --detectOpenHandles), build OK, lint OK.
+
+### Phase 6 — ESLint (partially done, core BLOCKED)
+
+- eslint-config-prettier 8.3.0 -> 9.x (supports ESLint >= 7).
+- eslint core BLOCKED at 7.32.0: `eslint-plugin-react-app` 6.2.2 (abandoned CRA-era bundle) loads
+  eslint-plugin-flowtype which deep-requires `eslint/lib/rules/*`, removed from ESLint 8 package
+  exports (`ERR_PACKAGE_PATH_NOT_EXPORTED`, reproduced). ESLint 9/10 additionally require flat
+  config. Unblocking requires replacing the plugin (ruleset change) — separate decision task.
+- babel-eslint kept (used internally by the bundled react-app config).
+- Validation: lint green (--max-warnings 0), 18/140 tests green, build green.
