@@ -246,90 +246,90 @@ test("parseAttributes complex fixture", () => {
   var-result="[{{roll}}]"
 >`;
   expect(parseAttributes(content)).toMatchInlineSnapshot(`
-    Map {
-      "id" => Object {
-        "location": Object {
-          "end": 31,
-          "start": 12,
-        },
-        "type": "attribute",
-        "value": Object {
-          "location": Object {
-            "end": 30,
-            "start": 16,
-          },
-          "type": "stringAttributeValue",
-          "value": "attackTemplate",
-        },
-      },
-      "var-score" => Object {
-        "location": Object {
-          "end": 92,
-          "start": 34,
-        },
-        "type": "attribute",
-        "value": Object {
-          "location": Object {
-            "end": 91,
-            "start": 45,
-          },
-          "type": "plainAttributeValue",
-          "value": "{
-        \\"label\\": \\"Axe Score\\",
-        \\"value\\": 4
-      }",
-        },
-      },
-      "var-mod" => Object {
-        "location": Object {
-          "end": 181,
-          "start": 95,
-        },
-        "type": "attribute",
-        "value": Object {
-          "location": Object {
-            "end": 180,
-            "start": 104,
-          },
-          "type": "plainAttributeValue",
-          "value": "{
-        \\"label\\": \\"Handicap\\",
-        \\"value\\": 0,
-        \\"min\\": -20,
-        \\"max\\": 20
-      }",
-        },
-      },
-      "var-roll" => Object {
-        "location": Object {
-          "end": 201,
-          "start": 184,
-        },
-        "type": "attribute",
-        "value": Object {
-          "location": Object {
-            "end": 200,
-            "start": 194,
-          },
-          "type": "stringAttributeValue",
-          "value": "[1d20]",
-        },
-      },
-      "var-result" => Object {
-        "location": Object {
-          "end": 227,
-          "start": 204,
-        },
-        "type": "attribute",
-        "value": Object {
-          "location": Object {
-            "end": 226,
-            "start": 216,
-          },
-          "type": "stringAttributeValue",
-          "value": "[{{roll}}]",
-        },
-      },
-    }
+   Map {
+     "id" => {
+       "location": {
+         "end": 31,
+         "start": 12,
+       },
+       "type": "attribute",
+       "value": {
+         "location": {
+           "end": 30,
+           "start": 16,
+         },
+         "type": "stringAttributeValue",
+         "value": "attackTemplate",
+       },
+     },
+     "var-score" => {
+       "location": {
+         "end": 92,
+         "start": 34,
+       },
+       "type": "attribute",
+       "value": {
+         "location": {
+           "end": 91,
+           "start": 45,
+         },
+         "type": "plainAttributeValue",
+         "value": "{
+       "label": "Axe Score",
+       "value": 4
+     }",
+       },
+     },
+     "var-mod" => {
+       "location": {
+         "end": 181,
+         "start": 95,
+       },
+       "type": "attribute",
+       "value": {
+         "location": {
+           "end": 180,
+           "start": 104,
+         },
+         "type": "plainAttributeValue",
+         "value": "{
+       "label": "Handicap",
+       "value": 0,
+       "min": -20,
+       "max": 20
+     }",
+       },
+     },
+     "var-roll" => {
+       "location": {
+         "end": 201,
+         "start": 184,
+       },
+       "type": "attribute",
+       "value": {
+         "location": {
+           "end": 200,
+           "start": 194,
+         },
+         "type": "stringAttributeValue",
+         "value": "[1d20]",
+       },
+     },
+     "var-result" => {
+       "location": {
+         "end": 227,
+         "start": 204,
+       },
+       "type": "attribute",
+       "value": {
+         "location": {
+           "end": 226,
+           "start": 216,
+         },
+         "type": "stringAttributeValue",
+         "value": "[{{roll}}]",
+       },
+     },
+   }
   `);
 });

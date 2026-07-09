@@ -12,13 +12,13 @@ li {
 
   expect(await processUserStyleSheet({ selectorScope: ".container" })(styles))
     .toMatchInlineSnapshot(`
-    Array [
-      ".container li {
-      color: red;
-    }",
-      ".container * {
-      color: blue;
-    }",
-    ]
+   [
+     ".container li {
+     color: red;
+   }",
+     ".container * {
+     color: blue;
+   }",
+   ]
   `);
 });

@@ -162,3 +162,14 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   (1450 TS1005 errors) — the whole category moves together with TypeScript.
 - Outcome: all category-3 packages reverted to original pins; artifacts regenerated identical;
   build/lint green; upload-suite flake re-confirmed as legacy defect #11 (passes in isolation).
+
+### Phase 5 — Jest and Babel (done)
+
+- jest 27.3.1 -> 30.4.2; babel-jest 27.3.1 -> 30.4.2; @babel/core 7.15.8 -> 7.29.7;
+  @babel/preset-env -> 7.28.x; @babel/preset-typescript -> 7.27.x (Babel stays on 7 — Babel 8 is
+  incompatible with the pinned relay/babel-macros toolchain).
+- @types/jest kept at 27: tsc auto-includes @types and jest-30 d.ts does not parse under the
+  TS 4.4 cap (Phase 4); tests are transformed by babel-jest (no type-check), so no runtime impact.
+- 3 inline snapshots re-recorded after review: only the documented Jest 29 default snapshot-format
+  change (`Object {`/`Array [` -> `{`/`[`, printBasicPrototype:false); values identical.
+- Validation: 18/140/4 green (also with --detectOpenHandles), build OK, lint OK.

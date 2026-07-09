@@ -19,16 +19,16 @@ bar
   }
 
   expect(result.right).toMatchInlineSnapshot(`
-    Object {
-      "content": "foo
-    ---
-    bar
-    ",
-      "id": "dr-wiki-notes",
-      "isEntryPoint": false,
-      "sanitizedContent": "foo
-    bar",
-      "title": "Dungeon Revealer Notes",
-    }
+   {
+     "content": "foo
+   ---
+   bar
+   ",
+     "id": "dr-wiki-notes",
+     "isEntryPoint": false,
+     "sanitizedContent": "foo
+   bar",
+     "title": "Dungeon Revealer Notes",
+   }
   `);
 });
