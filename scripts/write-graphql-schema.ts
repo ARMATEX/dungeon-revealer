@@ -4,12 +4,17 @@ import * as fs from "fs";
 import * as path from "path";
 import * as prettier from "prettier";
 
-let contents = "### THIS FILE IS AUTO GENERATED\n\n" + printSchema(schema);
+const main = async () => {
+  let contents = "### THIS FILE IS AUTO GENERATED\n\n" + printSchema(schema);
 
-const filePath = path.join(__dirname, "..", "type-definitions.graphql");
+  const filePath = path.join(__dirname, "..", "type-definitions.graphql");
 
-contents = prettier.format(contents, {
-  filepath: filePath,
-});
+  // prettier 3: format() is async.
+  contents = await prettier.format(contents, {
+    filepath: filePath,
+  });
 
-fs.writeFileSync(filePath, contents, "utf-8");
+  fs.writeFileSync(filePath, contents, "utf-8");
+};
+
+main();

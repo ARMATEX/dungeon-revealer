@@ -2,6 +2,7 @@
 // `t` from this module at evaluation time (circular import).
 import { t } from "./types-factory";
 import { buildGraphQLSchema } from "gqtx";
+import type { Field, SubscriptionField } from "gqtx";
 
 export { t };
 import type { Socket as IOSocket, Server as IOServer } from "socket.io";
@@ -83,35 +84,51 @@ const nodeField = t.field({
     ),
 });
 
+// gqtx 0.8.1 (stable) types `fields` as a non-empty tuple; the aggregated
+// module arrays are known to be non-empty, so the tuple casts are safe.
+type QueryFields = [
+  Field<GraphQLContextType, unknown, any, any>,
+  ...Field<GraphQLContextType, unknown, any, any>[],
+];
+type SubscriptionFields = [
+  SubscriptionField<GraphQLContextType, unknown, any, any>,
+  ...SubscriptionField<GraphQLContextType, unknown, any, any>[],
+];
+
 const Query = t.queryType({
-  fields: () => [
-    ...DiceRollerChatModule.queryFields,
-    ...UserModule.queryFields,
-    ...NotesModule.queryFields,
-    ...TokenImageModule.queryFields,
-    ...MapModule.queryFields,
-    nodeField,
-  ],
+  fields: () =>
+    [
+      ...DiceRollerChatModule.queryFields,
+      ...UserModule.queryFields,
+      ...NotesModule.queryFields,
+      ...TokenImageModule.queryFields,
+      ...MapModule.queryFields,
+      nodeField,
+      // TS 4.4 cannot relate a trailing-element tuple to a leading-element
+      // tuple directly; the array is provably non-empty (nodeField).
+    ] as unknown as QueryFields,
 });
 
 const Subscription = t.subscriptionType({
-  fields: () => [
-    ...UserModule.subscriptionFields,
-    ...DiceRollerChatModule.subscriptionFields,
-    ...NotesModule.subscriptionFields,
-    ...TokenImageModule.subscriptionsFields,
-    ...MapModule.subscriptionFields,
-  ],
+  fields: () =>
+    [
+      ...UserModule.subscriptionFields,
+      ...DiceRollerChatModule.subscriptionFields,
+      ...NotesModule.subscriptionFields,
+      ...TokenImageModule.subscriptionsFields,
+      ...MapModule.subscriptionFields,
+    ] as SubscriptionFields,
 });
 
 const Mutation = t.mutationType({
-  fields: () => [
-    ...UserModule.mutationFields,
-    ...DiceRollerChatModule.mutationFields,
-    ...NotesModule.mutationFields,
-    ...TokenImageModule.mutationFields,
-    ...MapModule.mutationFields,
-  ],
+  fields: () =>
+    [
+      ...UserModule.mutationFields,
+      ...DiceRollerChatModule.mutationFields,
+      ...NotesModule.mutationFields,
+      ...TokenImageModule.mutationFields,
+      ...MapModule.mutationFields,
+    ] as QueryFields,
 });
 
 export const schema = buildGraphQLSchema({

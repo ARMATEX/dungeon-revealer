@@ -13,7 +13,11 @@ import type {
   SocketSessionStore,
   SocketSessionRecord,
 } from "../socket-session-store";
-import { ExecutionResult, subscribe as originalSubscribe } from "graphql";
+import {
+  ExecutionResult,
+  execute as defaultExecute,
+  subscribe as originalSubscribe,
+} from "graphql";
 import { registerSocketIOGraphQLServer } from "@n1ru4l/socket-io-graphql-server";
 import { InMemoryLiveQueryStore } from "@n1ru4l/in-memory-live-query-store";
 import { applyLiveQueryJSONDiffPatchGenerator } from "@n1ru4l/graphql-live-query-patch-jsondiffpatch";
@@ -108,8 +112,10 @@ export default ({
       return input instanceof Promise ? input.then(handler) : handler(input);
     };
 
+  // in-memory-live-query-store 0.10: `execute` was replaced by
+  // `makeExecute(execute)`, which wraps graphql's default execute.
   const execute = flow(
-    liveQueryStore.execute,
+    liveQueryStore.makeExecute(defaultExecute),
     applyExecuteMiddleware(graphQLErrorLogger),
     applyLiveQueryJSONDiffPatchGenerator
   );

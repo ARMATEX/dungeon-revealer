@@ -491,7 +491,7 @@ input NoteUpdateIsEntryPointInput {
 }
 
 union RequestImageTokenUploadResult =
-    RequestTokenImageUploadDuplicate
+  | RequestTokenImageUploadDuplicate
   | RequestTokenImageUploadUrl
 
 """
@@ -722,7 +722,7 @@ type Subscription {
 }
 
 union UserUpdateSubscription =
-    UserAddUpdate
+  | UserAddUpdate
   | UserRemoveUpdate
   | UserChangeUpdate
 

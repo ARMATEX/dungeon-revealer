@@ -225,3 +225,19 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
 - Realtime verified: connection, authenticate/reject, role sessions, live-query invalidation,
   multi-client update, late join, clean shutdown (17 focused tests + full suite green).
 - Validation: 18/140/4 green, build OK, lint OK.
+
+### Phase 11 — GraphQL server and live queries (done)
+
+- graphql 15.6.1 -> 15.10.x (graphql 16 BLOCKED by relay-compiler 10 peer range).
+- gqtx 0.8.1-e6f907e5.0 (prerelease) -> 0.8.1 stable. Stable types `fields` as non-empty tuples —
+  type-level tuple casts added in server/graphql/index.ts (no runtime change; 140 tests prove it).
+- @graphql-yoga/subscription 0.0.2-canary -> 5.x stable (createPubSub API unchanged).
+- @n1ru4l family: graphql-live-query 0.10, in-memory-live-query-store 0.10 (API change:
+  `liveQueryStore.execute` -> `makeExecute(execute)` adapted in routes/graphql.ts),
+  live-query-patch-jsondiffpatch 0.8 (server+client+test helper in lockstep),
+  socket-io-graphql-server 0.13, socket-io-graphql-client 0.13, push-pull 3.2.
+- scripts/write-graphql-schema.ts adapted: prettier 3 format() is async.
+- type-definitions.graphql regenerated: 2-line diff is prettier-3 SDL union formatting only
+  (leading-pipe style); union members and schema semantics identical.
+- Validation: 18/140/4 green (live query invalidation, late join, roles, 2-client update),
+  write-schema green, build OK, lint OK.
