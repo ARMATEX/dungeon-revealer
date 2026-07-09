@@ -183,3 +183,13 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   config. Unblocking requires replacing the plugin (ruleset change) — separate decision task.
 - babel-eslint kept (used internally by the bundled react-app config).
 - Validation: lint green (--max-warnings 0), 18/140 tests green, build green.
+
+### Phase 7 — backend HTTP (done)
+
+- express 4.17.1 -> 4.22.2; body-parser 1.19.0 -> 1.20.x; morgan 1.10.0 -> 1.11.x;
+  serve-favicon 2.5.0 -> 2.5.1.
+- Express 5 deliberately deferred: the `(*)` route patterns (e.g. `PUT /files/(*)` in
+  routes/graphql.ts) are invalid under Express 5's path-to-regexp and auth/role middleware would
+  need re-verification — separate migration task.
+- Smoke coverage: baseline suites exercise /api/auth, active-map, uploads, role gates, shutdown.
+- Validation: 18/140 green, build OK, lint OK.
