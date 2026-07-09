@@ -140,3 +140,13 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
 - Validation: install OK, 18/140/4 green, build OK, lint OK.
 - Docker 29.6.1 available; full `docker build` deferred to final validation (Phase 20) to avoid
   a ~10 min build per phase.
+
+### Phase 3 — low-risk dev utilities (done)
+
+- prettier 2.4.1 -> 3.9.5 (`.prettierrc` pins `trailingComma: "es5"` to avoid a global reformat).
+- husky 7.0.4 -> 9.1.7 (`prepare: husky`; `.husky/pre-commit` migrated to v9 format).
+- lint-staged 11.2.6 -> 17.0.8; patch-package 6.4.7 -> 8.0.1 (all 4 patches still apply);
+  caxa 2.0.0 -> 3.0.1 (npm-deprecated/abandoned — `compile` scripts not exercised here);
+  ts-node-dev 1.1.8 -> 2.0.0.
+- cross-env: unused (no script references) — removal deferred to Phase 18.
+- Validation: 18/140/4 green, build OK, lint OK.
