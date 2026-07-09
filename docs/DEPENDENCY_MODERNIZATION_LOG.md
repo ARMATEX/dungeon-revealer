@@ -291,3 +291,17 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   @types/*, Jest types, socket.io 4.8, Vite 5+ and graphql 16. Recommended as the FIRST
   migration epic after this dependency pass.
 - relay-compiler and the TS plugin have local patches (patches/) that keep applying (verified).
+
+### Phase 17 — state and remaining utilities (done)
+
+- Runtime: lodash 4.18, fp-ts 2.16, io-ts 2.2.22, sanitize-html 2.17, liquidjs 9.30 -> 10.x
+  (chat templating; Liquid/LiquidError API unchanged — chat liquid path has weak automated
+  coverage, added to manual checklist).
+- Frontend/dev: zustand 3 -> 4.5 (default `create` import still supported), @monaco-editor/react
+  4.7 (loader-based; local monaco copy stays 0.31), @airjp73/dice-notation 2.x latest (dice specs
+  green), @n1ru4l/use-async-effect 1.4, htmlparser2 6 -> 9 + domhandler 5 (style-sheet specs +
+  snapshots green).
+- Kept: use-sound 3.0.1 (locally patched), showdown 1.9.1 + react-showdown 2.3.1 (lockstep),
+  monaco-editor 0.31.1 (copy script + VITE_MONACO_VERSION coupling; editor has no automated
+  coverage), parse-color/fast-sha256 (no newer releases), leva 0.9.14 (react-spring cluster).
+- Validation: 18/140/4 green, full build green, lint green.
