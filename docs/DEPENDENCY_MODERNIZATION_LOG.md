@@ -280,3 +280,14 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   cluster pinned to React 17 + the patched react-spring RC. Upgrading means migrating to
   @react-three/fiber 8+/@use-gesture/react/react-spring stable — the map-rendering migration epic.
 - Only react-use-measure 2.0.4 -> 2.1.x updated (standalone, React 17 compatible).
+
+### Phase 16 — Relay / GraphQL client (BLOCKED, documented)
+
+- react-relay / relay-runtime / relay-compiler / relay-config / babel-plugin-relay 10.1.3,
+  relay-hooks 4.2.0, relay-compiler-language-typescript 13.0.10 (abandoned; locally patched):
+  the whole cluster is pinned. Modern Relay (13+) replaces the JS compiler with the Rust compiler
+  (no language plugin, new config format, artifact changes) and requires React 18.
+- This is the keystone blocker: it caps TypeScript at 4.4 (Phase 4), which in turn caps
+  @types/*, Jest types, socket.io 4.8, Vite 5+ and graphql 16. Recommended as the FIRST
+  migration epic after this dependency pass.
+- relay-compiler and the TS plugin have local patches (patches/) that keep applying (verified).
