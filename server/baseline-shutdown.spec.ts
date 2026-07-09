@@ -53,9 +53,13 @@ test("close() stops the HTTP server, disconnects sockets and closes the database
   await disconnected;
   socket.close();
 
-  // New connections are refused.
+  // New connections are refused. The exact error code is platform/Node
+  // dependent: ECONNREFUSED (no listener) on Linux and Node 16, but
+  // ECONNRESET on Node 24 / Windows, where the just-closed listening socket
+  // resets the pending connection. Either code proves the request was
+  // refused rather than served.
   await expect(getJson({ baseUrl, path: "/api/auth" })).rejects.toMatchObject({
-    code: "ECONNREFUSED",
+    code: expect.stringMatching(/^(ECONNREFUSED|ECONNRESET)$/),
   });
 
   // The SQLite handle is really closed.
