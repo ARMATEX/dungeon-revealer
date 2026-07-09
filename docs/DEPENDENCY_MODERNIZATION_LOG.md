@@ -314,3 +314,19 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   (user-style-sheet processing), leva (chat message button), domhandler (aligned with
   htmlparser2 9).
 - Validation: 18/140 green, frontend build green.
+
+### Phase 19 — dedupe and audit (done)
+
+- `npm dedupe`: 127 duplicate packages removed; tests/build/lint stay green.
+- postcss 8.4.5 -> 8.5.16 (fixes the direct postcss advisory).
+- Audit after modernization: 20 vulnerabilities (3 low, 8 moderate, 9 high) — down from ~90 at
+  the legacy baseline. Classification:
+  - Runtime, blocked by the socket.io 4.7 cap (engine.io transitive): `cookie`, `ws` — both fixed
+    in socket.io 4.8, which unlocks with the TS/Relay migration.
+  - Runtime, no fixed release: `showdown` (all versions flagged) — pinned by react-showdown;
+    mitigated because rendered markdown is passed through sanitize-html.
+  - Dev-only/transitive: remaining advisories live in the blocked relay-compiler 10 toolchain,
+    eslint 7 / eslint-plugin-react-app chain and caxa — none are runtime-reachable.
+- `npm outdated` after this pass: ~56 packages remain, all inside the documented blocked clusters
+  (React/Relay/Chakra/Three/framer-motion/vite>=5/socket.io 4.8/graphql 16/TS>=4.5/@types).
+- No `npm audit fix` / `--force` was used.
