@@ -131,3 +131,12 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
 - Created `backup/pre-dependency-modernization`.
 
 (Entries appended below as each category completes.)
+
+### Phase 2 — Node 24 runtime (done)
+
+- `package.json`: added `engines` (`node >=24 <25`, `npm >=10`); created `.nvmrc` (24).
+- `Dockerfile`: `node:16` -> `node:24`, `node:16-slim` -> `node:24-slim`.
+- `package-lock.json` re-synced by npm 11 (lockfileVersion upgrade).
+- Validation: install OK, 18/140/4 green, build OK, lint OK.
+- Docker 29.6.1 available; full `docker build` deferred to final validation (Phase 20) to avoid
+  a ~10 min build per phase.

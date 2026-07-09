@@ -1,4 +1,4 @@
-FROM node:16 as dependency-builder
+FROM node:24 as dependency-builder
 
 WORKDIR /usr/src/build
 
@@ -21,7 +21,7 @@ FROM dependency-builder as production-dependency-builder
 RUN npm prune --production
 
 
-FROM node:16-slim as final
+FROM node:24-slim as final
 
 # Create app directory
 WORKDIR /usr/src/app
