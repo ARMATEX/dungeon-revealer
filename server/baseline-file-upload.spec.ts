@@ -100,19 +100,20 @@ test("players cannot upload images (401)", async () => {
   expect(response.status).toBe(401);
 });
 
-test("KNOWN DEFECT (documented): a multipart request without any file part yields 500, not 422", async () => {
-  // routes/files.js intends to answer 422 ("No file was sent.") from the
-  // request 'end' handler, but the busboy 'finish' handler unconditionally
-  // calls fileStorage.store() with a temp file that was never created, and
-  // that 500 wins the response race (observed current behavior).
+test("a multipart request without any file part yields 422", async () => {
+  // Regression test for legacy defect #4: under busboy 0.x the 'finish'
+  // handler unconditionally called fileStorage.store() with a temp file that
+  // was never created and its 500 won the response race. With busboy 1.x the
+  // request 'end' handler answers 422 first, and the 'finish' handlers now
+  // guard against the missing file so no second response is attempted.
   const response = await uploadMultipart({
     baseUrl: server!.baseUrl,
     path: "/api/images",
     token: DM_PASSWORD,
     files: [],
   });
-  expect(response.status).toBe(500);
-  expect(response.json().error.code).toBe("ERR_UNEXPECTED");
+  expect(response.status).toBe(422);
+  expect(response.json().error).toBe("No file was sent.");
 });
 
 test("a dangerous client-supplied file name cannot control the storage location", async () => {

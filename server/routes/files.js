@@ -19,7 +19,9 @@ module.exports = ({ roleMiddleware, fileStorage }) => {
 
     req.pipe(req.busboy);
 
-    req.busboy.once("file", (fieldname, file, filename) => {
+    // busboy 1.x: the third argument is an info object, not the file name.
+    req.busboy.once("file", (fieldname, file, info) => {
+      const filename = info.filename;
       fileExtension = parseFileExtension(filename);
       writeStream = fs.createWriteStream(tmpFile);
       fileName = filename;
@@ -32,17 +34,25 @@ module.exports = ({ roleMiddleware, fileStorage }) => {
     });
 
     req.busboy.once("finish", () => {
-      fileStorage
-        .store({ filePath: tmpFile, fileExtension, fileName })
-        .then((record) => {
-          res.json({
-            error: null,
-            data: {
-              item: record,
-            },
-          });
-        })
-        .catch(handleUnexpectedError(res));
+      // No file part arrived; the request "end" handler already sent a 422.
+      if (writeStream === null) return;
+      // Wait for the staging file to be fully flushed before consuming it
+      // (legacy race: store() used to run before the write stream closed).
+      const consume = () => {
+        fileStorage
+          .store({ filePath: tmpFile, fileExtension, fileName })
+          .then((record) => {
+            res.json({
+              error: null,
+              data: {
+                item: record,
+              },
+            });
+          })
+          .catch(handleUnexpectedError(res));
+      };
+      if (writeStream.closed) consume();
+      else writeStream.once("close", consume);
     });
   });
 

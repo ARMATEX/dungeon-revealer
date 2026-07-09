@@ -112,8 +112,9 @@ module.exports = ({ roleMiddleware, maps, settings, emitter }) => {
 
     req.pipe(req.busboy);
 
-    req.busboy.once("file", (fieldname, file, filename) => {
-      fileExtension = parseFileExtension(filename);
+    // busboy 1.x: the third argument is an info object, not the file name.
+    req.busboy.once("file", (fieldname, file, info) => {
+      fileExtension = parseFileExtension(info.filename);
       writeStream = fs.createWriteStream(tmpFile);
       file.pipe(writeStream);
     });
@@ -124,12 +125,19 @@ module.exports = ({ roleMiddleware, maps, settings, emitter }) => {
     });
 
     req.busboy.once("finish", () => {
-      maps
-        .updateMapImage(req.params.id, { filePath: tmpFile, fileExtension })
-        .then((map) => {
-          res.status(200).json({ error: null, data: mapMap(map) });
-        })
-        .catch(handleUnexpectedError(res));
+      // No file part arrived; the request "end" handler already sent a 422.
+      if (writeStream === null) return;
+      // Wait for the staging file to be fully flushed before consuming it.
+      const consume = () => {
+        maps
+          .updateMapImage(req.params.id, { filePath: tmpFile, fileExtension })
+          .then((map) => {
+            res.status(200).json({ error: null, data: mapMap(map) });
+          })
+          .catch(handleUnexpectedError(res));
+      };
+      if (writeStream.closed) consume();
+      else writeStream.once("close", consume);
     });
   });
 
@@ -149,16 +157,23 @@ module.exports = ({ roleMiddleware, maps, settings, emitter }) => {
     });
 
     req.busboy.once("finish", () => {
-      maps
-        .updateFogProgressImage(req.params.id, tmpFile)
-        .then((map) => {
-          emitter.emit("invalidate", `Map:${map.id}`);
-          res.status(200).json({
-            error: null,
-            data: mapMap(map),
-          });
-        })
-        .catch(handleUnexpectedError(res));
+      // No file part arrived; the request "end" handler already sent a 422.
+      if (writeStream === null) return;
+      // Wait for the staging file to be fully flushed before consuming it.
+      const consume = () => {
+        maps
+          .updateFogProgressImage(req.params.id, tmpFile)
+          .then((map) => {
+            emitter.emit("invalidate", `Map:${map.id}`);
+            res.status(200).json({
+              error: null,
+              data: mapMap(map),
+            });
+          })
+          .catch(handleUnexpectedError(res));
+      };
+      if (writeStream.closed) consume();
+      else writeStream.once("close", consume);
     });
   });
 
@@ -179,14 +194,21 @@ module.exports = ({ roleMiddleware, maps, settings, emitter }) => {
     });
 
     req.busboy.once("finish", () => {
-      maps
-        .updateFogLiveImage(req.params.id, tmpFile)
-        .then((map) => {
-          settings.set("currentMapId", map.id);
-          emitter.emit("invalidate", "Query.activeMap");
-          res.json({ error: null, data: mapMap(map) });
-        })
-        .catch(handleUnexpectedError(res));
+      // No file part arrived; the request "end" handler already sent a 422.
+      if (writeStream === null) return;
+      // Wait for the staging file to be fully flushed before consuming it.
+      const consume = () => {
+        maps
+          .updateFogLiveImage(req.params.id, tmpFile)
+          .then((map) => {
+            settings.set("currentMapId", map.id);
+            emitter.emit("invalidate", "Query.activeMap");
+            res.json({ error: null, data: mapMap(map) });
+          })
+          .catch(handleUnexpectedError(res));
+      };
+      if (writeStream.closed) consume();
+      else writeStream.once("close", consume);
     });
   });
 

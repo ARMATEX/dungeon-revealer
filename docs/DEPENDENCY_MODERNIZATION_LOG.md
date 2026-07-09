@@ -202,3 +202,16 @@ in Notes), `blocked` (newer version incompatible with the current stack, reason 
   idempotent reopen, data preserved, legacy notes import, prepared statements, clean close.
 - No schema change. Existing db.sqlite files remain compatible (migrations untouched).
 - Validation: 18/140 green, backend tsc green, lint green.
+
+### Phase 9 — uploads and filesystem (done)
+
+- connect-busboy 0.0.2 -> 1.0.0 (+ @types 1.0.3): busboy 1 file-event signature adapted in
+  routes/files.js, routes/map.js, routes/notes.ts (`info.filename`).
+- fs-extra 9.1.0 -> 11.x (+ @types 11); unzipper 0.10.11 -> 0.12.x (note import re-verified).
+- junk kept at 3.1.0: v4 is ESM-only, server compiles to CJS (blocked until ESM migration).
+- Legacy defect #4 FIXED as a side effect of busboy 1 + finish-handler guard: multipart without a
+  file now answers 422 deterministically; baseline test updated to assert the correct behavior.
+- Legacy defect #11 (staging write race -> intermittent 500) FIXED at the root: all four upload
+  finish handlers now wait for the staging write stream to close before consuming the file.
+  Regression: upload suite passed 6/6 consecutive runs (previously flaky).
+- Validation: 18/140/4 green, build OK, lint OK.
